@@ -7,6 +7,7 @@ import 'package:onstagram/providers/auth_provider.dart';
 import 'package:onstagram/providers/dark_mode_provider.dart';
 import 'package:onstagram/screens/auth_screens/register_screen.dart';
 import 'package:onstagram/widgets/clickables/app_button.dart';
+import 'package:onstagram/widgets/clickables/dark_mode_button.dart';
 import 'package:onstagram/widgets/inputs/app_input.dart';
 import 'package:provider/provider.dart';
 
@@ -40,30 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
             actions: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: darkModeConsumer.isDark
-                        ? darkButtonColor
-                        : buttonColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Provider.of<DarkModeProvider>(
-                        context,
-                        listen: false,
-                      ).switchMode();
-                    },
-                    icon: Icon(
-                      darkModeConsumer.isDark
-                          ? Icons.light_mode_outlined
-                          : Icons.dark_mode_outlined,
-                      size: 20,
-                    ),
-                  ),
-                ),
+                child: DarkModeButton(),
               ),
             ],
           ),

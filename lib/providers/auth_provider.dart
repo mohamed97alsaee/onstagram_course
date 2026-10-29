@@ -113,6 +113,19 @@ class AuthProvider extends BaseProvider {
     }
   }
 
+  // Fresh numbers every time the profile opens.
+  void getMe() async {
+    setBusyMore(true);
+    final response = await api.get("/api/auth/me");
+
+    if (response.statusCode == 200) {
+      currentUser = UserProfileModel.fromJson(
+        json.decode(response.body)['data'],
+      );
+    }
+    setBusyMore(false);
+  }
+
   Future<ActionResult> logout() async {
     setBusy(true);
     final response = await api.post("/api/auth/logout", {});

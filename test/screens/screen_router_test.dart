@@ -41,6 +41,8 @@ void main() {
 
         await tester.pump(Duration(seconds: 2));
         await tester.pumpAndSettle();
+        // The profile asks /api/auth/me again (getMe): let it finish.
+        await tester.pump(Duration(seconds: 2));
       },
       () => fakeServer((request) async {
         await Future<void>.delayed(Duration(seconds: 2));
@@ -98,6 +100,11 @@ void main() {
         await pumpApp(tester);
         await tester.tap(find.text("Log out"));
         await tester.pumpAndSettle();
+        expect(find.text("Log out of Onstagram?"), findsOneWidget);
+
+        // The dialog's own "Log out" confirms.
+        await tester.tap(find.text("Log out").last);
+        await tester.pumpAndSettle();
       },
       () => fakeServer((request) async {
         paths.add(request.url.path);
@@ -113,6 +120,7 @@ void main() {
 
     expect(paths, contains("/api/auth/logout"));
     expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.text("Logged out successfully"), findsOneWidget);
     expect(await storage.read(key: "user_token"), isNull);
   });
 }
