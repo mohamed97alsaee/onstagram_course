@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 import 'package:material_ui/material_ui.dart';
 import 'package:onstagram/helpers/consts.dart';
 import 'package:onstagram/helpers/functions.dart';
+import 'package:onstagram/services/api.dart';
 
 class HomeScreen extends StatefulWidget {
   const new({super.key});
@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Api api = Api();
   bool busy = false;
   String serverMessage = "";
 
@@ -21,13 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       busy = true;
     });
 
-    final response = await http.get(
-      Uri.parse("$baseUrl/api/test"),
-      headers: {
-        "Accept": "application/json",
-        "X-Student-Api-Key": studentApiKey,
-      },
-    );
+    final response = await api.get("/api/test");
 
     // The screen may have closed while we waited.
     if (!mounted) return;
