@@ -1,0 +1,28 @@
+name: onstagram
+description: "Onstagram: an Instagram-style Flutter client for the Onstagram course API."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^9.0.0
+  # Material widgets live in their own package since Flutter 3.47.
+  material_ui: ^1.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/logo_typography.png
+    # Cairo ships with the app: no download on the first launch.
+    - google_fonts/
