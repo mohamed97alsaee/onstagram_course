@@ -29,3 +29,26 @@ Map<String, dynamic> saraJson() => {
   "created_at": "2026-10-29T10:00:00.000000Z",
   "updated_at": "2026-10-29T10:00:00.000000Z",
 };
+
+/// The answer to a successful POST /api/auth/login.
+Map<String, dynamic> loginAnswer() => {
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 57,
+      "name": "Sara Ahmed",
+      "username": "sara_ahmed",
+      "email": "sara@example.com",
+      "photo": null,
+    },
+    "token": "1|fake-token",
+  },
+};
+
+/// Laravel's answer to wrong credentials (422).
+Map<String, dynamic> wrongPasswordAnswer() => {
+  "message": "The provided credentials are incorrect.",
+  "errors": {
+    "email": ["The provided credentials are incorrect."],
+  },
+};
