@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:onstagram/helpers/consts.dart';
 import 'package:onstagram/main.dart';
 import 'package:onstagram/screens/main_screens/tabs_content/home_screen.dart';
 
@@ -18,5 +19,19 @@ void main() {
 
     final context = tester.element(find.byType(HomeScreen));
     expect(Theme.of(context).colorScheme.primary, const Color(0xff0095F6));
+  });
+
+  testWidgets('home says whether the student key arrived', (tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    // flutter test: missing. With --dart-define=STUDENT_API_KEY=...: loaded.
+    expect(
+      find.text(
+        studentApiKey.isEmpty
+            ? "Student key: missing (see README)"
+            : "Student key: loaded",
+      ),
+      findsOneWidget,
+    );
   });
 }

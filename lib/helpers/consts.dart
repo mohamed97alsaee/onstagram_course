@@ -1,6 +1,12 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
 
+// ------------------ API CONSTANTS ------------------
+
+// Read from .env.json at build time (--dart-define-from-file).
+// Never write the key here: this file goes to GitHub.
+const String studentApiKey = String.fromEnvironment("STUDENT_API_KEY");
+
 // ------------------ COLORS CONSTANTS ------------------
 
 Color blueColor = Color(0xff0095F6);
