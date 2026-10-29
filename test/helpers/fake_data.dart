@@ -1,0 +1,31 @@
+/// Sara, as GET /api/auth/me describes a brand-new account:
+/// no photo and no bio yet (both are null in the API).
+Map<String, dynamic> saraJson() => {
+  "id": 57,
+  "name": "Sara Ahmed",
+  "username": "sara_ahmed",
+  "email": "sara@example.com",
+  "is_demo": false,
+  "photo": null,
+  "bio": null,
+  "role": "user",
+  "stats": {
+    "posts_count": 12,
+    "reels_count": 0,
+    "stories_count": 0,
+    "comments_count": 3,
+    "likes_count": 40,
+    "files_count": 12,
+    "reposts_count": 0,
+    "mentioned_in_count": 0,
+    "followers_count": 180,
+    "followings_count": 75,
+  },
+  "highlights": [],
+  "posts": [],
+  "stories": [],
+  "reposts": [],
+  "mentioned_in_posts": [],
+  "created_at": "2026-10-29T10:00:00.000000Z",
+  "updated_at": "2026-10-29T10:00:00.000000Z",
+};
