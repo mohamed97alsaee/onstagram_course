@@ -73,6 +73,46 @@ class AuthProvider extends BaseProvider {
     }
   }
 
+  Future<ActionResult> register(Map body) async {
+    setBusy(true);
+    final response = await api.post("/api/auth/register", body);
+
+    if (response.statusCode == 201) {
+      await storage.write(
+        key: "user_token",
+        value: json.decode(response.body)['data']['token'],
+      );
+      await initAuth();
+      setFailed(false);
+      setBusy(false);
+      return (
+        success: true,
+        message: json.decode(response.body)['message'] as String,
+      );
+    } else {
+      setFailed(true);
+      setBusy(false);
+      return (
+        success: false,
+        message: json.decode(response.body)['message'] as String,
+      );
+    }
+  }
+
+  Future<ActionResult> checkUsername(String un) async {
+    setBusyMore(true);
+    final response = await api.get("/api/auth/check-username?username=$un");
+
+    var decodedData = json.decode(response.body);
+    setBusyMore(false);
+    if (response.statusCode == 200 &&
+        decodedData['data']?['available'] == true) {
+      return (success: true, message: decodedData['message'] as String);
+    } else {
+      return (success: false, message: decodedData['message'] as String);
+    }
+  }
+
   Future<ActionResult> logout() async {
     setBusy(true);
     final response = await api.post("/api/auth/logout", {});

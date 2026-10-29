@@ -11,6 +11,7 @@ class AppInput extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.showValue = true,
     this.suffix,
+    this.underWidget,
     this.hPadding = 16,
     this.vPadding = 6,
   });
@@ -21,6 +22,7 @@ class AppInput extends StatelessWidget {
   final TextInputType keyboardType;
   final bool showValue;
   final Widget? suffix;
+  final Widget? underWidget;
   final double hPadding;
   final double vPadding;
 
@@ -46,6 +48,8 @@ class AppInput extends StatelessWidget {
               suffixIcon: suffix,
             ),
           ),
+          // Only added when it is not null.
+          ?underWidget,
         ],
       ),
     );

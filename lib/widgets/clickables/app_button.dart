@@ -9,6 +9,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.txtColor,
     this.isLoading = false,
+    this.enabled = true,
     this.hPadding = 16,
     this.vPadding = 6,
     this.internalPadding = 9,
@@ -18,6 +19,7 @@ class AppButton extends StatelessWidget {
   final Function onPressed;
   final Color? txtColor;
   final bool isLoading;
+  final bool enabled;
   final double hPadding;
   final double vPadding;
   final double internalPadding;
@@ -28,7 +30,7 @@ class AppButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: btnColor,
+          backgroundColor: btnColor.withValues(alpha: enabled ? 1 : 0.33),
           elevation: 0,
           // 9 + one line of text (26) + 9 = 44 high, like Instagram.
           padding: EdgeInsets.all(internalPadding),
@@ -38,7 +40,7 @@ class AppButton extends StatelessWidget {
         ),
         onPressed: () {
           // Busy: ignore the tap, so one click sends one request.
-          if (!isLoading) {
+          if (enabled && !isLoading) {
             onPressed();
           }
         },

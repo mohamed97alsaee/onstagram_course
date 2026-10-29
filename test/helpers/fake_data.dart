@@ -58,3 +58,11 @@ Map<String, dynamic> meAnswer() => {
   "message": "Current user profile retrieved successfully.",
   "data": saraJson(),
 };
+
+/// The answer to GET /api/auth/check-username.
+Map<String, dynamic> usernameAnswer(String username, bool available) => {
+  "message": available
+      ? "Username is available."
+      : "Username is already taken.",
+  "data": {"username": username, "available": available},
+};

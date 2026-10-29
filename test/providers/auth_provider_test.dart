@@ -78,4 +78,39 @@ void main() {
       expect(authProvider.busy, isFalse);
     });
   });
+
+  group('checkUsername', () {
+    test('an available name: success, and busyMore while asking', () async {
+      final authProvider = AuthProvider();
+      final busyMoreValues = <bool>[];
+      authProvider.addListener(() => busyMoreValues.add(authProvider.busyMore));
+      late http.Request sent;
+
+      final checkResult = await http.runWithClient(
+        () => authProvider.checkUsername("sara_ahmed"),
+        () => fakeServer((request) async {
+          sent = request;
+          return jsonResponse(usernameAnswer("sara_ahmed", true));
+        }),
+      );
+
+      expect(sent.url.path, "/api/auth/check-username");
+      expect(sent.url.queryParameters["username"], "sara_ahmed");
+      expect(checkResult.success, isTrue);
+      expect(checkResult.message, "Username is available.");
+      expect(busyMoreValues, [true, false]);
+    });
+
+    test('a taken name: no success, the server sentence', () async {
+      final checkResult = await http.runWithClient(
+        () => AuthProvider().checkUsername("sara"),
+        () => fakeServer(
+          (request) async => jsonResponse(usernameAnswer("sara", false)),
+        ),
+      );
+
+      expect(checkResult.success, isFalse);
+      expect(checkResult.message, "Username is already taken.");
+    });
+  });
 }

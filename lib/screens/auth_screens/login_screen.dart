@@ -1,9 +1,11 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:emails_validator/emails_validator.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:onstagram/helpers/consts.dart';
 import 'package:onstagram/helpers/functions.dart';
 import 'package:onstagram/providers/auth_provider.dart';
 import 'package:onstagram/providers/dark_mode_provider.dart';
+import 'package:onstagram/screens/auth_screens/register_screen.dart';
 import 'package:onstagram/widgets/clickables/app_button.dart';
 import 'package:onstagram/widgets/inputs/app_input.dart';
 import 'package:provider/provider.dart';
@@ -148,6 +150,44 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
+            ),
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(
+                  color: darkModeConsumer.isDark
+                      ? darkBorderColor
+                      : buttonColor,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don’t have an account?",
+                        style: bodyMedium.copyWith(color: greyTextColor),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => RegisterScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Sign up",
+                          style: labelLarge.copyWith(color: blueColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         );
