@@ -8,22 +8,28 @@ import 'package:onstagram/helpers/consts.dart';
 
 class Api {
   // One place for the headers: every request sends the same ones.
-  Map<String, String> _headers() {
-    return {"Accept": "application/json", "X-Student-Api-Key": studentApiKey};
+  Future<Map<String, String>> _headers() async {
+    String? token = await storage.read(key: "user_token");
+
+    return {
+      "Accept": "application/json",
+      "X-Student-Api-Key": studentApiKey,
+      if (token != null) "Authorization": "Bearer $token",
+    };
   }
 
   Future<http.Response> get(String endPoint) {
-    return _send("GET", endPoint, () {
-      return http.get(Uri.parse(baseUrl + endPoint), headers: _headers());
+    return _send("GET", endPoint, () async {
+      return http.get(Uri.parse(baseUrl + endPoint), headers: await _headers());
     });
   }
 
   Future<http.Response> post(String endPoint, Map body) {
-    return _send("POST", endPoint, () {
+    return _send("POST", endPoint, () async {
       return http.post(
         Uri.parse(baseUrl + endPoint),
         body: body,
-        headers: _headers(),
+        headers: await _headers(),
       );
     });
   }

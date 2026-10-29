@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -8,6 +9,11 @@ String baseUrl = "https://onstagramcourse.com";
 // Read from .env.json at build time (--dart-define-from-file).
 // Never write the key here: this file goes to GitHub.
 const String studentApiKey = String.fromEnvironment("STUDENT_API_KEY");
+
+// ------------------ STORAGE CONSTANTS ------------------
+
+// Keychain on iOS, encrypted storage on Android: the token is a password.
+const FlutterSecureStorage storage = FlutterSecureStorage();
 
 // ------------------ COLORS CONSTANTS ------------------
 

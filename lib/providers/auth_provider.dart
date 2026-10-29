@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:onstagram/helpers/consts.dart';
 import 'package:onstagram/providers/base_provider.dart';
 
 class AuthProvider extends BaseProvider {
@@ -11,6 +12,8 @@ class AuthProvider extends BaseProvider {
 
     if (response.statusCode == 200) {
       token = json.decode(response.body)['data']['token'];
+      // Saved on the device: every request after this one sends it.
+      await storage.write(key: "user_token", value: token);
       setFailed(false);
       setBusy(false);
       return (

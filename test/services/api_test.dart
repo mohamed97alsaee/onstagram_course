@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -101,6 +102,38 @@ void main() {
 
       expect(response.statusCode, 401);
       expect(json.decode(response.body)['message'], "Unauthenticated.");
+    });
+  });
+
+  group('the saved token', () {
+    Future<http.Request> sentBy(Future<void> Function() call) async {
+      late http.Request sent;
+      await http.runWithClient(
+        call,
+        () => MockClient((request) async {
+          sent = request;
+          return http.Response('{"message": "ok"}', 200);
+        }),
+      );
+      return sent;
+    }
+
+    test('no token yet: no Authorization header', () async {
+      final sent = await sentBy(() => Api().get("/api/test"));
+
+      expect(sent.headers.containsKey("Authorization"), isFalse);
+    });
+
+    test('a saved token goes with every request as Bearer', () async {
+      FlutterSecureStorage.setMockInitialValues({"user_token": "1|abc"});
+
+      final getRequest = await sentBy(() => Api().get("/api/auth/me"));
+      final postRequest = await sentBy(
+        () => Api().post("/api/auth/logout", {}),
+      );
+
+      expect(getRequest.headers["Authorization"], "Bearer 1|abc");
+      expect(postRequest.headers["Authorization"], "Bearer 1|abc");
     });
   });
 }

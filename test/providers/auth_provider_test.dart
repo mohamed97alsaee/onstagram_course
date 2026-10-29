@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:onstagram/helpers/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:onstagram/providers/auth_provider.dart';
 
@@ -28,6 +29,7 @@ void main() {
       expect(loginResult.success, isTrue);
       expect(loginResult.message, "Login successful");
       expect(authProvider.token, "1|fake-token");
+      expect(await storage.read(key: "user_token"), "1|fake-token");
       expect(authProvider.failed, isFalse);
     });
 
@@ -47,6 +49,7 @@ void main() {
       expect(loginResult.success, isFalse);
       expect(loginResult.message, "The provided credentials are incorrect.");
       expect(authProvider.token, isNull);
+      expect(await storage.read(key: "user_token"), isNull);
       expect(authProvider.failed, isTrue);
     });
 
