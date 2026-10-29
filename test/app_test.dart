@@ -34,4 +34,23 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('the moon button switches the whole app to dark and back', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+    Brightness brightness() =>
+        Theme.of(tester.element(find.byType(HomeScreen))).brightness;
+
+    expect(brightness(), Brightness.light);
+
+    await tester.tap(find.byIcon(Icons.dark_mode_outlined));
+    await tester.pumpAndSettle();
+    expect(brightness(), Brightness.dark);
+    expect(find.byIcon(Icons.light_mode_outlined), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.light_mode_outlined));
+    await tester.pumpAndSettle();
+    expect(brightness(), Brightness.light);
+  });
 }

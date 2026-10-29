@@ -24,6 +24,12 @@ Color borderColor = Color(0xffDBDBDB);
 Color fieldColor = Color(0xffFAFAFA);
 Color buttonColor = Color(0xffEFEFEF);
 
+Color darkTextColor = Color(0xffFAFAFA);
+Color darkHintColor = Color(0xff737373);
+Color darkBorderColor = Color(0xff262626);
+Color darkFieldColor = Color(0xff121212);
+Color darkButtonColor = Color(0xff262626);
+
 // ------------------ TEXT STYLES CONSTANTS ------------------
 
 TextStyle titleLarge = GoogleFonts.cairo(
@@ -113,6 +119,70 @@ ThemeData theme = ThemeData(
   dialogTheme: DialogThemeData(
     backgroundColor: whiteColor,
     barrierColor: blackColor.withValues(alpha: 0.5),
+    elevation: 0,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  ),
+);
+
+ThemeData darkTheme = ThemeData(
+  colorScheme: .fromSeed(
+    seedColor: blueColor,
+    brightness: .dark,
+    primary: blueColor,
+    surface: blackColor,
+    onSurface: darkTextColor,
+    error: redColor,
+  ),
+  scaffoldBackgroundColor: blackColor,
+  appBarTheme: AppBarThemeData(
+    backgroundColor: blackColor,
+    scrolledUnderElevation: 0,
+    titleTextStyle: titleLarge.copyWith(color: darkTextColor),
+  ),
+  dividerTheme: DividerThemeData(
+    color: darkBorderColor,
+    thickness: 1,
+    space: 1,
+  ),
+  textTheme: TextTheme(
+    titleLarge: titleLarge,
+    titleMedium: titleMedium,
+    labelLarge: labelLarge,
+    bodyLarge: bodyLarge,
+    bodyMedium: bodyMedium,
+    bodySmall: bodySmall,
+  ),
+  inputDecorationTheme: InputDecorationThemeData(
+    isDense: true,
+    filled: true,
+    fillColor: darkFieldColor,
+    hintStyle: bodyLarge.copyWith(color: darkHintColor),
+    errorStyle: bodySmall.copyWith(color: redColor),
+    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: darkBorderColor),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: darkBorderColor),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: greyTextColor),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: redColor),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: redColor),
+    ),
+  ),
+  dialogTheme: DialogThemeData(
+    backgroundColor: darkButtonColor,
+    barrierColor: blackColor.withValues(alpha: 0.6),
     elevation: 0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),

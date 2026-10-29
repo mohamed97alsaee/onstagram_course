@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:material_ui/material_ui.dart';
 import 'package:onstagram/helpers/consts.dart';
 import 'package:onstagram/helpers/functions.dart';
+import 'package:onstagram/providers/dark_mode_provider.dart';
 import 'package:onstagram/services/api.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const new({super.key});
@@ -35,32 +37,68 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              "assets/images/logo_typography.png",
-              width: getSize(context).width * 0.35,
+    return Consumer<DarkModeProvider>(
+      builder: (context, darkModeConsumer, _) {
+        return Scaffold(
+          appBar: AppBar(
+            actions: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: darkModeConsumer.isDark
+                        ? darkButtonColor
+                        : buttonColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      // listen: false - we only call it, we don't rebuild.
+                      Provider.of<DarkModeProvider>(
+                        context,
+                        listen: false,
+                      ).switchMode();
+                    },
+                    icon: Icon(
+                      darkModeConsumer.isDark
+                          ? Icons.light_mode_outlined
+                          : Icons.dark_mode_outlined,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          body: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  "assets/images/logo_typography.png",
+                  width: getSize(context).width * 0.35,
+                ),
+                SizedBox(height: 24),
+                // Never show the key itself, only whether it arrived.
+                Text(
+                  studentApiKey.isNotEmpty
+                      ? "Student key: loaded"
+                      : "Student key: missing (see README)",
+                ),
+                SizedBox(height: 24),
+                FilledButton(
+                  onPressed: busy ? null : pingApi,
+                  child: Text(busy ? "Waiting..." : "Ping API"),
+                ),
+                SizedBox(height: 16),
+                Text(serverMessage),
+              ],
             ),
-            SizedBox(height: 24),
-            // Never show the key itself, only whether it arrived.
-            Text(
-              studentApiKey.isNotEmpty
-                  ? "Student key: loaded"
-                  : "Student key: missing (see README)",
-            ),
-            SizedBox(height: 24),
-            FilledButton(
-              onPressed: busy ? null : pingApi,
-              child: Text(busy ? "Waiting..." : "Ping API"),
-            ),
-            SizedBox(height: 16),
-            Text(serverMessage),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
