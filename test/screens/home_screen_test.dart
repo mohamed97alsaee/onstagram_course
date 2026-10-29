@@ -33,4 +33,30 @@ void main() {
     expect(sent!.headers["Accept"], "application/json");
     expect(sent!.headers.containsKey("X-Student-Api-Key"), isTrue);
   });
+
+  testWidgets('a server that never answers ends in a message, not a hang', (
+    tester,
+  ) async {
+    await http.runWithClient(
+      () async {
+        await tester.pumpWidget(const MyApp());
+        await tester.tap(find.text("Ping API"));
+        await tester.pump(Duration(seconds: 15));
+        await tester.pump();
+      },
+      () => MockClient((request) async {
+        await Future<void>.delayed(Duration(seconds: 30));
+        return http.Response('{"message": "too late"}', 200);
+      }),
+    );
+
+    expect(
+      find.text("599: The server took too long. Try again."),
+      findsOneWidget,
+    );
+    expect(find.text("Ping API"), findsOneWidget);
+
+    // Let the slow fake answer finish so no timer is left pending.
+    await tester.pump(Duration(seconds: 15));
+  });
 }
