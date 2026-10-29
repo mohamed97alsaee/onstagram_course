@@ -81,4 +81,73 @@ void main() {
       "password": "secret123",
     });
   });
+
+  Future<void> fillAndSubmit(WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.enterText(fieldWithHint("Email"), "sara@example.com");
+    await tester.enterText(fieldWithHint("Password"), "secret123");
+    await tester.tap(find.text("Log in"));
+  }
+
+  Color? snackBarColor(WidgetTester tester) {
+    return tester.widget<SnackBar>(find.byType(SnackBar)).backgroundColor;
+  }
+
+  testWidgets('a good login shows a green SnackBar', (tester) async {
+    await http.runWithClient(() async {
+      await fillAndSubmit(tester);
+      await tester.pumpAndSettle();
+    }, () => fakeServer((request) async => jsonResponse(loginAnswer())));
+
+    expect(find.text("Login successful"), findsOneWidget);
+    expect(snackBarColor(tester), const Color(0xff58C322));
+  });
+
+  testWidgets('a refused login shows the server sentence in red', (
+    tester,
+  ) async {
+    await http.runWithClient(
+      () async {
+        await fillAndSubmit(tester);
+        await tester.pumpAndSettle();
+      },
+      () => fakeServer(
+        (request) async => jsonResponse(wrongPasswordAnswer(), status: 422),
+      ),
+    );
+
+    expect(
+      find.text("The provided credentials are incorrect."),
+      findsOneWidget,
+    );
+    expect(snackBarColor(tester), const Color(0xffED4956));
+  });
+
+  testWidgets('while waiting: a spinner, and more taps send nothing', (
+    tester,
+  ) async {
+    var requests = 0;
+
+    await http.runWithClient(
+      () async {
+        await fillAndSubmit(tester);
+        await tester.pump();
+
+        expect(find.text("Log in"), findsNothing);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        await tester.tap(find.byType(CircularProgressIndicator));
+
+        await tester.pump(Duration(seconds: 1));
+        await tester.pumpAndSettle();
+      },
+      () => fakeServer((request) async {
+        requests++;
+        await Future<void>.delayed(Duration(seconds: 1));
+        return jsonResponse(loginAnswer());
+      }),
+    );
+
+    expect(requests, 1);
+    expect(find.text("Log in"), findsOneWidget);
+  });
 }

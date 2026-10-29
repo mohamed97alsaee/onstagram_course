@@ -1,18 +1,29 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:onstagram/services/api.dart';
+import 'package:onstagram/providers/base_provider.dart';
 
-class AuthProvider with ChangeNotifier {
-  Api api = Api();
+class AuthProvider extends BaseProvider {
   String? token;
 
-  Future<String> login(Map body) async {
+  Future<ActionResult> login(Map body) async {
+    setBusy(true);
     final response = await api.post("/api/auth/login", body);
 
     if (response.statusCode == 200) {
       token = json.decode(response.body)['data']['token'];
+      setFailed(false);
+      setBusy(false);
+      return (
+        success: true,
+        message: json.decode(response.body)['message'] as String,
+      );
+    } else {
+      setFailed(true);
+      setBusy(false);
+      return (
+        success: false,
+        message: json.decode(response.body)['message'] as String,
+      );
     }
-    return json.decode(response.body)['message'];
   }
 }

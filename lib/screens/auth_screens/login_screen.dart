@@ -122,12 +122,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     AppButton(
                       label: "Log in",
                       btnColor: blueColor,
+                      isLoading: authConsumer.busy,
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                          authConsumer.login({
-                            "email": emailController.text,
-                            "password": passwordController.text,
-                          });
+                          authConsumer
+                              .login({
+                                "email": emailController.text,
+                                "password": passwordController.text,
+                              })
+                              .then((loginResult) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: loginResult.success
+                                          ? greenColor
+                                          : redColor,
+                                      content: Text(loginResult.message),
+                                    ),
+                                  );
+                                }
+                              });
                         }
                       },
                     ),

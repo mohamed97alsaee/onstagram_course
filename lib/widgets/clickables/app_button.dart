@@ -7,6 +7,7 @@ class AppButton extends StatelessWidget {
     required this.label,
     required this.btnColor,
     required this.onPressed,
+    this.isLoading = false,
     this.hPadding = 16,
     this.vPadding = 6,
     this.internalPadding = 9,
@@ -14,6 +15,7 @@ class AppButton extends StatelessWidget {
   final String label;
   final Color btnColor;
   final Function onPressed;
+  final bool isLoading;
   final double hPadding;
   final double vPadding;
   final double internalPadding;
@@ -33,9 +35,24 @@ class AppButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         onPressed: () {
-          onPressed();
+          // Busy: ignore the tap, so one click sends one request.
+          if (!isLoading) {
+            onPressed();
+          }
         },
-        child: Text(label, style: labelLarge.copyWith(color: whiteColor)),
+        child: isLoading
+            ? SizedBox(
+                width: 26,
+                height: 26,
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: whiteColor,
+                  ),
+                ),
+              )
+            : Text(label, style: labelLarge.copyWith(color: whiteColor)),
       ),
     );
   }
