@@ -1,9 +1,42 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:material_ui/material_ui.dart';
 import 'package:onstagram/helpers/consts.dart';
 import 'package:onstagram/helpers/functions.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const new({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool busy = false;
+  String serverMessage = "";
+
+  void pingApi() async {
+    setState(() {
+      busy = true;
+    });
+
+    final response = await http.get(
+      Uri.parse("$baseUrl/api/test"),
+      headers: {
+        "Accept": "application/json",
+        "X-Student-Api-Key": studentApiKey,
+      },
+    );
+
+    // The screen may have closed while we waited.
+    if (!mounted) return;
+    setState(() {
+      busy = false;
+      serverMessage =
+          "${response.statusCode}: ${json.decode(response.body)['message']}";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +56,13 @@ class HomeScreen extends StatelessWidget {
                   ? "Student key: loaded"
                   : "Student key: missing (see README)",
             ),
+            SizedBox(height: 24),
+            FilledButton(
+              onPressed: busy ? null : pingApi,
+              child: Text(busy ? "Waiting..." : "Ping API"),
+            ),
+            SizedBox(height: 16),
+            Text(serverMessage),
           ],
         ),
       ),

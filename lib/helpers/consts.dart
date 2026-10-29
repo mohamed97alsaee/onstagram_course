@@ -3,6 +3,8 @@ import 'package:material_ui/material_ui.dart';
 
 // ------------------ API CONSTANTS ------------------
 
+String baseUrl = "https://onstagramcourse.com";
+
 // Read from .env.json at build time (--dart-define-from-file).
 // Never write the key here: this file goes to GitHub.
 const String studentApiKey = String.fromEnvironment("STUDENT_API_KEY");
