@@ -1,7 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:onstagram/helpers/consts.dart';
+import 'package:onstagram/providers/auth_provider.dart';
 import 'package:onstagram/providers/dark_mode_provider.dart';
-import 'package:onstagram/screens/main_screens/tabs_content/home_screen.dart';
+import 'package:onstagram/screens/auth_screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -15,7 +16,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Above MaterialApp, so every screen can reach the providers.
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => DarkModeProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => DarkModeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
       child: Consumer<DarkModeProvider>(
         builder: (context, darkModeConsumer, _) {
           return MaterialApp(
@@ -26,7 +30,7 @@ class MyApp extends StatelessWidget {
                 : ThemeMode.light,
             theme: theme,
             darkTheme: darkTheme,
-            home: HomeScreen(),
+            home: LoginScreen(),
           );
         },
       ),

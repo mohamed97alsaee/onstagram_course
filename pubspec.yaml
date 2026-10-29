@@ -8,6 +8,7 @@ environment:
   sdk: ^3.13.4
 
 dependencies:
+  emails_validator: ^1.1.0
   flutter:
     sdk: flutter
   google_fonts: ^9.0.0

@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.4"
+  emails_validator:
+    dependency: "direct main"
+    description:
+      name: emails_validator
+      sha256: b3f790def87f9767c0d562915ce576bc53ae0aede4fae37eaae475e8ed3b9fd5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   fake_async:
     dependency: transitive
     description:
