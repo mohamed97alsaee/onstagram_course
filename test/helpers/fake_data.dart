@@ -52,3 +52,9 @@ Map<String, dynamic> wrongPasswordAnswer() => {
     "email": ["The provided credentials are incorrect."],
   },
 };
+
+/// The answer to GET /api/auth/me for Sara.
+Map<String, dynamic> meAnswer() => {
+  "message": "Current user profile retrieved successfully.",
+  "data": saraJson(),
+};

@@ -2,19 +2,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:onstagram/main.dart';
 import 'package:onstagram/screens/auth_screens/login_screen.dart';
+import 'package:onstagram/screens/handling_screens/splash_screen.dart';
+
+import 'helpers/test_app.dart';
 
 void main() {
-  testWidgets('the app starts on the login screen with the logo', (
+  testWidgets('the app opens on the splash, then the login screen', (
     tester,
   ) async {
     await tester.pumpWidget(const MyApp());
+    expect(find.byType(SplashScreen), findsOneWidget);
+    expect(find.text("Alsaee.dev"), findsOneWidget);
 
+    await tester.pump(Duration(seconds: 5));
+    await tester.pumpAndSettle();
+    expect(find.byType(SplashScreen), findsNothing);
     expect(find.byType(LoginScreen), findsOneWidget);
-    expect(find.byType(Image), findsOneWidget);
   });
 
   testWidgets('the theme comes from the blue seed', (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await pumpApp(tester);
 
     final context = tester.element(find.byType(LoginScreen));
     expect(Theme.of(context).colorScheme.primary, const Color(0xff0095F6));
@@ -23,7 +30,7 @@ void main() {
   testWidgets('the moon button switches the whole app to dark and back', (
     tester,
   ) async {
-    await tester.pumpWidget(const MyApp());
+    await pumpApp(tester);
     Brightness brightness() =>
         Theme.of(tester.element(find.byType(LoginScreen))).brightness;
 

@@ -7,6 +7,7 @@ class AppButton extends StatelessWidget {
     required this.label,
     required this.btnColor,
     required this.onPressed,
+    this.txtColor,
     this.isLoading = false,
     this.hPadding = 16,
     this.vPadding = 6,
@@ -15,6 +16,7 @@ class AppButton extends StatelessWidget {
   final String label;
   final Color btnColor;
   final Function onPressed;
+  final Color? txtColor;
   final bool isLoading;
   final double hPadding;
   final double vPadding;
@@ -48,11 +50,14 @@ class AppButton extends StatelessWidget {
                   padding: const EdgeInsets.all(3),
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: whiteColor,
+                    color: txtColor ?? whiteColor,
                   ),
                 ),
               )
-            : Text(label, style: labelLarge.copyWith(color: whiteColor)),
+            : Text(
+                label,
+                style: labelLarge.copyWith(color: txtColor ?? whiteColor),
+              ),
       ),
     );
   }

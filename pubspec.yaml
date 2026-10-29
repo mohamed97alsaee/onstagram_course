@@ -8,9 +8,12 @@ environment:
   sdk: ^3.13.4
 
 dependencies:
+  # CupertinoPageRoute: the iOS-style slide between screens.
+  cupertino_ui: ^1.1.1
   emails_validator: ^1.1.0
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.2
   flutter_secure_storage: ^11.2.0
   google_fonts: ^9.0.0
   http: ^1.6.0

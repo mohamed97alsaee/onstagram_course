@@ -18,6 +18,9 @@ void main() {
           "password": "secret123",
         }),
         () => fakeServer((request) async {
+          if (request.url.path == "/api/auth/me") {
+            return jsonResponse(meAnswer());
+          }
           sent = request;
           return jsonResponse(loginAnswer());
         }),
@@ -63,7 +66,12 @@ void main() {
           "email": "sara@example.com",
           "password": "secret123",
         }),
-        () => fakeServer((request) async => jsonResponse(loginAnswer())),
+        () => fakeServer((request) async {
+          if (request.url.path == "/api/auth/me") {
+            return jsonResponse(meAnswer());
+          }
+          return jsonResponse(loginAnswer());
+        }),
       );
 
       expect(busyValues.first, isTrue);

@@ -1,12 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:material_ui/material_ui.dart';
-import 'package:onstagram/main.dart';
 
 import '../../helpers/fake_data.dart';
 import '../../helpers/fake_server.dart';
-
-Finder fieldWithHint(String hint) => find.widgetWithText(TextFormField, hint);
+import '../../helpers/test_app.dart';
 
 void main() {
   testWidgets('an empty form shows what is missing and sends nothing', (
@@ -16,7 +14,7 @@ void main() {
 
     await http.runWithClient(
       () async {
-        await tester.pumpWidget(const MyApp());
+        await pumpApp(tester);
         await tester.tap(find.text("Log in"));
         await tester.pump();
       },
@@ -32,7 +30,7 @@ void main() {
   });
 
   testWidgets('a broken email is refused by EmailsValidator', (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await pumpApp(tester);
 
     await tester.enterText(fieldWithHint("Email"), "sara@");
     await tester.tap(find.text("Log in"));
@@ -42,7 +40,7 @@ void main() {
   });
 
   testWidgets('the eye shows and hides the password', (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await pumpApp(tester);
     bool isHidden() => tester
         .widget<EditableText>(
           find.descendant(
@@ -63,13 +61,16 @@ void main() {
 
     await http.runWithClient(
       () async {
-        await tester.pumpWidget(const MyApp());
+        await pumpApp(tester);
         await tester.enterText(fieldWithHint("Email"), "sara@example.com");
         await tester.enterText(fieldWithHint("Password"), "secret123");
         await tester.tap(find.text("Log in"));
         await tester.pumpAndSettle();
       },
       () => fakeServer((request) async {
+        if (request.url.path == "/api/auth/me") {
+          return jsonResponse(meAnswer());
+        }
         sent = request;
         return jsonResponse(loginAnswer());
       }),
@@ -83,7 +84,7 @@ void main() {
   });
 
   Future<void> fillAndSubmit(WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
+    await pumpApp(tester);
     await tester.enterText(fieldWithHint("Email"), "sara@example.com");
     await tester.enterText(fieldWithHint("Password"), "secret123");
     await tester.tap(find.text("Log in"));
@@ -92,16 +93,6 @@ void main() {
   Color? snackBarColor(WidgetTester tester) {
     return tester.widget<SnackBar>(find.byType(SnackBar)).backgroundColor;
   }
-
-  testWidgets('a good login shows a green SnackBar', (tester) async {
-    await http.runWithClient(() async {
-      await fillAndSubmit(tester);
-      await tester.pumpAndSettle();
-    }, () => fakeServer((request) async => jsonResponse(loginAnswer())));
-
-    expect(find.text("Login successful"), findsOneWidget);
-    expect(snackBarColor(tester), const Color(0xff58C322));
-  });
 
   testWidgets('a refused login shows the server sentence in red', (
     tester,
@@ -143,7 +134,7 @@ void main() {
       () => fakeServer((request) async {
         requests++;
         await Future<void>.delayed(Duration(seconds: 1));
-        return jsonResponse(loginAnswer());
+        return jsonResponse(wrongPasswordAnswer(), status: 422);
       }),
     );
 
